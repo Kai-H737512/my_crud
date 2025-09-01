@@ -1,6 +1,7 @@
 "use server";
 
 import { neon } from '@neondatabase/serverless';
+import { stackServerApp } from '@/stack';
 
 export async function getUserDetails(userId: string | undefined) {
   if (!process.env.DATABASE_URL) {
@@ -16,5 +17,12 @@ export async function getUserDetails(userId: string | undefined) {
   
   return user;
 }
+ 
+export async function getUserId() {
+  const user = await stackServerApp.getUser();
+  const userId = user?.id;
 
-export async function getUserProfile(userId: string | undefined) {}
+  if (!userId) return;
+
+  return userId;
+}
