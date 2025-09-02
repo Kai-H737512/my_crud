@@ -24,10 +24,9 @@ async function page({params}: {params: {slug: string}}) {
 
   const user = await stackServerApp.getUser();
   // get plant from slug
-  const [id] = params.slug.split("-")[0];
+  const [id] = params.slug.split("-");
   const plants = await getPlantById(id);
   
-
   if (!user) {
     return <SignIn />
   }

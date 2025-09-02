@@ -1,6 +1,9 @@
+"use server"
+
 import { getUserId } from "./user.action"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { Prisma } from "@prisma/client"
 
 export async function getPlants(searchTerm: String) {
   try {
@@ -22,7 +25,7 @@ export async function getPlants(searchTerm: String) {
     });
     
     revalidatePath("/");
-    console.log('getting userplants', userPlants);
+    
     return {success: true, data: userPlants};
 
   } catch (error) {
@@ -60,4 +63,27 @@ export async function getPlantById(plantId: string) {
     where: {id: plantId},
   });
   return plant;
+}
+
+export async function createPlant(data: Prisma.PlantsCreateInput) {
+  
+
+  try {
+    const currentUserId = await getUserId();
+    if (!currentUserId) {
+      return {success: false, message: "User not found"};
+    }
+    
+    const newPlant = await prisma.plants.create({
+      data: {
+        ...data,
+        userId: currentUserId,
+      }
+    });
+
+    return {success: true, data: newPlant};
+  } catch (error) {
+      console.error("Error creating plant:", error);
+      throw new Error("Failed to create plant");
+    }
 }
