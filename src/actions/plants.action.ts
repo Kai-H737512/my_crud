@@ -54,3 +54,10 @@ export async function deletePlant(plantId: string) {
     throw new Error("Failed to delete plant");
   }
 }
+
+export async function getPlantById(plantId: string) {
+  const plant = await prisma.plants.findUnique({
+    where: {id: plantId},
+  });
+  return plant;
+}

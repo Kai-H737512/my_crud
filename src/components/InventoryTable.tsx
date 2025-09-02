@@ -14,6 +14,7 @@ import { Search } from "lucide-react"
 import { useState } from "react"
 import { Combobox } from "./ui/combo-box"
 import { getPlants } from "@/actions/plants.action"
+import { useRouter } from "next/navigation"
 
 type Plant = Awaited<ReturnType<typeof getPlants>>;
 
@@ -25,11 +26,14 @@ interface InventoryTableProps {
 export default function InventoryTable({plants}: InventoryTableProps) {
   const [selectedCategory, setSelectedCategory] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const router = useRouter();
 
   const filterPlants = plants?.data?.filter((plant: Plant) => 
     plant.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
     (selectedCategory === "" || plant.category === selectedCategory)
   );
+
+
 
   return (
     <div className="w-full">
@@ -60,8 +64,14 @@ export default function InventoryTable({plants}: InventoryTableProps) {
         </TableHeader>
 
         <TableBody>
-          {filterPlants?.map((plant) => (
-            <TableRow key={plant.id}>
+          {filterPlants?.map((plant) => { 
+            const slugifiedName = plant.name.toLowerCase().replace(/ /g, "-");
+            const slug = `/plants/${plant.id}--${slugifiedName}`;
+            const plantUrl = `${slug}`;
+            
+            return(
+
+            <TableRow key={plant.id} onClick={() => router.push(plantUrl)}>
               <TableCell className="font-medium">{plant.name}</TableCell>
               <TableCell>{plant.category}</TableCell>
               <TableCell>{plant.price}$</TableCell>
@@ -73,7 +83,7 @@ export default function InventoryTable({plants}: InventoryTableProps) {
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
 
       </Table>
