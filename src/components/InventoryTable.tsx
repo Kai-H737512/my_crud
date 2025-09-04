@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Input } from "./ui/input"
-import { Search } from "lucide-react"
+import { Edit, Search, Trash   } from "lucide-react"
 import { useState } from "react"
 import { Combobox } from "./ui/combo-box"
 import { getPlants } from "@/actions/plants.action"
@@ -18,6 +18,9 @@ import { useRouter } from "next/navigation"
 import { Skeleton } from "./ui/skeleton"
 import { Button } from "./ui/button"
 import { AlertDialogDemo } from "./CreateDialog"
+import EditDialog from "./EditDialog"
+import { DEFAULT_CIPHERS } from "tls"
+import { DeleteDialog } from "./DeleteDialog"
 
 
 type Plant = Awaited<ReturnType<typeof getPlants>>;
@@ -140,9 +143,17 @@ export default function InventoryTable({plants}: InventoryTableProps) {
               <TableCell>{plant.price}$</TableCell>
               <TableCell>{plant.stock}</TableCell>
               <TableCell className="text-right">
-                <div className="flex justify-end space-x-2">
-                  <h1>edit button</h1>
-                  <h1>delete button</h1>
+                <div 
+                  className="flex justify-end space-x-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                    <EditDialog plant={plant}>
+                      
+                    </EditDialog>
+                    <DeleteDialog plant={plant}>
+                      
+                    </DeleteDialog>
+                  
                 </div>
               </TableCell>
             </TableRow>

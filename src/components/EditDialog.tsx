@@ -10,31 +10,35 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { Sprout } from "lucide-react"
+import { Edit } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/ui/combo-box"
 import { Textarea } from "@/components/ui/textarea"
 import ImageUpload from "@/components/ImageUpload"
 import { useState } from "react"
-import { createPlant } from "@/actions/plants.action"
+import { editPlant, getPlantById } from "@/actions/plants.action"
 import { toast } from "react-hot-toast"
 
+type Plant = NonNullable<Awaited<ReturnType<typeof getPlantById>>>;
 
+interface EditDialogProps {
+  plant: Plant;
+}
 
-export function AlertDialogDemo() {
+export default function EditDialog({plant}: EditDialogProps) {
 
   const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    description: "",
-    stock: 1,
-    price: 1,
-    imageUrl: "",
-    userId: "",
+    name: plant?.name.trim(),
+    category: plant?.category.trim(),
+    description: (plant?.description || "").trim(),
+    stock: plant?.stock,
+    price: plant?.price,
+    imageUrl: plant?.imageUrl || "",
   });
 
   const handleChange = (field: string, value: string | number) => {
+    console.log("handleChange called with field:", field, "and value:", value);
     setFormData({...formData, [field]: value});
   };
 
@@ -43,12 +47,12 @@ export function AlertDialogDemo() {
     console.log(formData);
 
     try { 
-      const newPlant = await createPlant(formData);
+      const newPlant = await editPlant(plant.id, formData);
       console.log("newPlant", newPlant);
-      toast.success("Plant added successfully");
+      toast.success("Plant edited successfully");
     } catch (error) {
-      console.error("Error adding plant:", error);
-      toast.error("Failed to add plant");
+      console.error("Error editing plant:", error);
+      toast.error("Failed to edit plant");
     }
   };
 
@@ -61,16 +65,16 @@ export function AlertDialogDemo() {
           asChild
           >
             <span>
-              <Sprout className="w-4 h-4" />
-              Add Plant</span>
+              <Edit className="w-4 h-4" />
+              Edit</span>
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Add a Plant</AlertDialogTitle>
+          <AlertDialogTitle>Edit</AlertDialogTitle>
           <AlertDialogDescription className="text-[15px ]">
-            Fill out the form to add a plant to your inventory.
+            Fill out the form to edit the plant.
           </AlertDialogDescription>
         </AlertDialogHeader>
         
@@ -127,13 +131,13 @@ export function AlertDialogDemo() {
 
           {/*Image Upload*/}
           <div className="py-5">
-            <ImageUpload
-              endpoint="postImage"
-              value={formData.imageUrl}
-              onChange={(url) => {
-                handleChange("imageUrl", url);
-              }}
-            />
+          <ImageUpload
+            endpoint="postImage"
+            value={formData.imageUrl}
+            onChange={(url) => {
+              handleChange("imageUrl", url);
+            }}
+          />
           </div>
           
 
