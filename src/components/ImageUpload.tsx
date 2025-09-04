@@ -64,7 +64,7 @@ function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
         onClientUploadComplete={(res) => {
           // Do something with the response
           console.log("Files: ", res);
-          alert("Upload Completed");
+          
           if (res && res[0]?.ufsUrl) {
             console.log('calling onChange');
             onChange(res[0].ufsUrl);
