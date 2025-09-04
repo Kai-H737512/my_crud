@@ -10,7 +10,6 @@ interface ImageUploadProps {
 }
 
 function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
-
   
   if (value) {
     return (
@@ -39,7 +38,21 @@ function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
           uploadIcon: {
             width: "60px",
             height: "60px",
-            marginTop: "30px",
+            marginTop: "20px",
+          },
+          button: {
+            display: "flex",
+            opacity: "1",
+            visibility: "visible",
+            cursor: "pointer",
+            color: "#ffffff", // 白色文字
+            backgroundColor: "#3b82f6", // 蓝色背景
+            border: "1px solid #e5e7eb", // 浅灰色边框
+            borderRadius: "6px", // 圆角
+            padding: "8px 16px", // 内边距
+            fontSize: "14px", // 字体大小
+            fontWeight: "500", // 字体粗细
+            marginBottom: "10px", // 下边距
           },
           container: {
             flexDirection: "column",
@@ -53,6 +66,7 @@ function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
           console.log("Files: ", res);
           alert("Upload Completed");
           if (res && res[0]?.ufsUrl) {
+            console.log('calling onChange');
             onChange(res[0].ufsUrl);
           }
         }}

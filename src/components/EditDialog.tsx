@@ -8,17 +8,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Edit } from "lucide-react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Combobox } from "@/components/ui/combo-box"
-import { Textarea } from "@/components/ui/textarea"
-import ImageUpload from "@/components/ImageUpload"
-import { useState } from "react"
-import { editPlant, getPlantById } from "@/actions/plants.action"
-import { toast } from "react-hot-toast"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { EditIcon, Sprout } from "lucide-react";
+import { Combobox } from "./ui/combo-box";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { useState } from "react";
+import { Textarea } from "./ui/textarea";
+import { editPlant, getPlantById } from "@/actions/plants.action";
+import toast from "react-hot-toast";
+import ImageUpload from "./ImageUpload";
 
 type Plant = NonNullable<Awaited<ReturnType<typeof getPlantById>>>;
 
@@ -26,32 +26,30 @@ interface EditDialogProps {
   plant: Plant;
 }
 
-export default function EditDialog({plant}: EditDialogProps) {
-
-  const [formData, setFormData] = useState({
-    name: plant?.name.trim(),
-    category: plant?.category.trim(),
-    description: (plant?.description || "").trim(),
-    stock: plant?.stock,
-    price: plant?.price,
-    imageUrl: plant?.imageUrl || "",
-  });
+export default function EditDialog({ plant }: EditDialogProps) {
+  const [formData, setFormData] = useState(() => ({
+    name: plant.name.trim(),
+    description: (plant.description || "").trim(),
+    stock: plant.stock,
+    price: plant.price,
+    category: plant.category.trim(),
+    userId: plant.userId.trim(),
+    imageUrl: plant.imageUrl || "",
+  }));
 
   const handleChange = (field: string, value: string | number) => {
-    console.log("handleChange called with field:", field, "and value:", value);
-    setFormData({...formData, [field]: value});
+    console.log('calling handleChange from EditDialog', field, value);
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
-
-    try { 
+    try {
       const newPlant = await editPlant(plant.id, formData);
-      console.log("newPlant", newPlant);
+      console.log("plant edited: ", newPlant);
       toast.success("Plant edited successfully");
     } catch (error) {
-      console.error("Error editing plant:", error);
+      console.error("error creating plant", error);
       toast.error("Failed to edit plant");
     }
   };
@@ -59,25 +57,25 @@ export default function EditDialog({plant}: EditDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button 
-          variant="default"
+        <Button
+          variant="secondary"
           className="ml-auto flex items-center gap-2"
           asChild
-          >
-            <span>
-              <Edit className="w-4 h-4" />
-              Edit</span>
+        >
+          <span>
+            <EditIcon className="w-4 h-4" />
+            Edit Plant
+          </span>
         </Button>
       </AlertDialogTrigger>
-
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Edit</AlertDialogTitle>
-          <AlertDialogDescription className="text-[15px ]">
-            Fill out the form to edit the plant.
+          <AlertDialogTitle>Add a Plant</AlertDialogTitle>
+          <AlertDialogDescription>
+            Fill out the form below to add a new plant to your inventory.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -131,23 +129,22 @@ export default function EditDialog({plant}: EditDialogProps) {
 
           {/*Image Upload*/}
           <div className="py-5">
-          <ImageUpload
-            endpoint="postImage"
-            value={formData.imageUrl}
-            onChange={(url) => {
-              handleChange("imageUrl", url);
-            }}
-          />
+            <ImageUpload
+              endpoint="postImage"
+              value={formData.imageUrl}
+              onChange={(url) => {
+                console.log('calling onChang from EditDialog');
+                handleChange("imageUrl", url);
+              }}
+            />
           </div>
-          
 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction type="submit">Submit</AlertDialogAction>
           </AlertDialogFooter>
         </form>
-        
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

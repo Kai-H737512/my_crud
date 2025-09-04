@@ -102,8 +102,9 @@ export async function editPlant(
       });
       revalidatePath("/plants");
       
+      return { success: true, data: plant };
     } catch (error) {
-        console.error("Error creating plant:", error);
-        throw new Error("Failed to create plant");
+        console.error("Error editing plant:", error);
+        throw new Error("Failed to edit plant");
       }
 }
