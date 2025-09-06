@@ -11,7 +11,7 @@ export async function generateMetadata({
 }) {
  
   // Extract the id from the slug by splitting on the delimiter
-  const [id] = params.slug.split("--")[0];
+  const id = params.slug.split("--")[0];
   const plant = await getPlantById(id);
   return {
     title: plant ? plant.name : "Plant Details",
@@ -24,7 +24,7 @@ async function page({params}: {params: {slug: string}}) {
 
   const user = await stackServerApp.getUser();
   // get plant from slug
-  const [id] = params.slug.split("-");
+  const id = params.slug.split("-")[0];
   const plants = await getPlantById(id);
   
   if (!user) {

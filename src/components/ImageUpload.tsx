@@ -32,7 +32,7 @@ function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
 
   return (
     <div className="w-full flex items-center justify-center">
-      <UploadDropzone<OurFileRouter, "postImage">
+      <UploadDropzone
         className="w-full !h-15"
         appearance={{
           uploadIcon: {
@@ -77,12 +77,12 @@ function ImageUpload({endpoint, value, onChange}: ImageUploadProps)  {
           console.log("Uploading: ", name)
         }}
 
-        onDrop={(acceptedFiles, fileRejections) => {
+        onDrop={(acceptedFiles) => {
           console.log("📁 Files dropped:", acceptedFiles);
-          console.log("❌ File rejections:", fileRejections);
         }}
         onBeforeUploadBegin={(files) => {
           console.log("🔍 Before upload begin:", files);
+          return files;
         }}
         onUploadError={(error: Error) => {
           alert(`ERROR! ${error.message}`);

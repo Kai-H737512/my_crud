@@ -23,11 +23,10 @@ import { DEFAULT_CIPHERS } from "tls"
 import { DeleteDialog } from "./DeleteDialog"
 
 
-type Plant = Awaited<ReturnType<typeof getPlants>>;
+type Plant = Awaited<ReturnType<typeof getPlants>>['data'][0];
 
 interface InventoryTableProps {
-  plants: Plant
-  userPlants: Plant
+  plants: Awaited<ReturnType<typeof getPlants>>
 }
 
 export default function InventoryTable({plants}: InventoryTableProps) {
@@ -114,7 +113,7 @@ export default function InventoryTable({plants}: InventoryTableProps) {
         </div>
 
         <Combobox value={selectedCategory} onChange={(val) => setSelectedCategory(val)} />
-        <AlertDialogDemo>Add Plant</AlertDialogDemo> 
+        <AlertDialogDemo /> 
         
       </div>
         <Table>
