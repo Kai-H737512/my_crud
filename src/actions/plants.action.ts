@@ -65,7 +65,6 @@ export async function getPlantById(plantId: string) {
 }
 
 export async function createPlant(data: Prisma.PlantsCreateInput) {
-  
 
   try {
     const currentUserId = await getUserId();
