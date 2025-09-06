@@ -64,7 +64,14 @@ export async function getPlantById(plantId: string) {
   return plant;
 }
 
-export async function createPlant(data: Prisma.PlantsCreateInput) {
+export async function createPlant(data: {
+  name: string;
+  description?: string | null;
+  category: string;
+  stock: number;
+  price: number;
+  imageUrl?: string | null;
+}) {
 
   try {
     const currentUserId = await getUserId();
@@ -88,7 +95,14 @@ export async function createPlant(data: Prisma.PlantsCreateInput) {
 
 export async function editPlant(
   id: string,
-  data: Prisma.PlantsUpdateInput
+  data: {
+    name?: string;
+    description?: string | null;
+    category?: string;
+    stock?: number;
+    price?: number;
+    imageUrl?: string | null;
+  }
 ) {
     try {
       const currentUserId = await getUserId();
