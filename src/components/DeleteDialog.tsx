@@ -29,12 +29,10 @@ export function DeleteDialog({plant}: {plant: Plant}) {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button 
-          variant="outline" className="ml-auto flex items-center gap-2 bg-red-600 hover:bg-red-700" asChild
-          onClick={handleDelete}
+          variant="outline" className="ml-auto flex items-center gap-2 bg-red-600 hover:bg-red-700"
         >
           <span>
             <Trash className="w-4 h-4" />
-            Delete
           </span>
         </Button>
       </AlertDialogTrigger>
@@ -47,7 +45,12 @@ export function DeleteDialog({plant}: {plant: Plant}) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-500 hover:bg-red-600">Continue</AlertDialogAction>
+          <AlertDialogAction 
+            className="bg-red-500 hover:bg-red-600"
+            onClick={handleDelete}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
